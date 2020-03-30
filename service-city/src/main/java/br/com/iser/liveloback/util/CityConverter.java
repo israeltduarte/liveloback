@@ -8,31 +8,31 @@ import br.com.iser.liveloback.model.dto.CityDTO;
 
 public class CityConverter {
 
-    public static City convertToCity(CityDTO source) {
+   public static City convertToCity(CityDTO source) {
 
-        City target = new City();
+      City target = new City();
 
-        BeanUtils.copyProperties(source, target);
+      BeanUtils.copyProperties(source, target);
 
-        return target;
-    }
+      return target;
+   }
 
-    private static CityDTO convertToCityDTO(City source) {
+   private static CityDTO convertToCityDTO(City source) {
 
-        CityDTO target = new CityDTO();
+      CityDTO target = new CityDTO();
 
-        BeanUtils.copyProperties(source, target);
+      BeanUtils.copyProperties(source, target);
 
-        return target;
-    }
+      return target;
+   }
 
-    public static List<CityDTO> convertToListCityDTO(List<City> source) {
+   public static List<CityDTO> convertToListCityDTO(List<City> source) {
 
-        List<CityDTO> listDTO = new ArrayList<>();
-        source.forEach(client -> {
-            listDTO.add(convertToCityDTO(client));
-        });
+      List<CityDTO> listDTO = new ArrayList<>();
+      source.forEach(client -> {
+         listDTO.add(convertToCityDTO(client));
+      });
 
-        return listDTO;
-    }
+      return listDTO;
+   }
 }
