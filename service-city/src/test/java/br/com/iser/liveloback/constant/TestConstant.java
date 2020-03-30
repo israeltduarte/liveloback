@@ -1,11 +1,9 @@
 package br.com.iser.liveloback.constant;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TestConstant {
 
-   public static String CITY_DTO = "city dto";
-   public static String CITY_ENTITY = "city entity";
+   public static final String CITY_ENTITY = "city entity";
+   public static final String CITY_DTO = "city dto";
+   public static final String CITY_RANDOM_ENTITY = "city random entity";
+   public static final String CITY_RANDOM_DTO = "city random dto";
 }

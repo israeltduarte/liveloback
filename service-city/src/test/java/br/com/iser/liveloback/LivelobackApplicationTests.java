@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -20,14 +21,14 @@ import br.com.iser.liveloback.model.City;
 import br.com.iser.liveloback.model.dto.CityDTO;
 import br.com.iser.liveloback.repository.CityRepository;
 import br.com.iser.liveloback.service.impl.CityServiceImpl;
+import br.com.iser.liveloback.util.CityConverter;
 import br.com.iser.liveloback.validation.Validator;
 import br.com.iser.liveloback.validation.exception.CityNotFoundException;
-import br.com.iser.liveloback.validation.exception.SearchException;
-import br.com.iser.liveloback.validation.exception.ValidationException;
 import br.com.six2six.fixturefactory.Fixture;
+import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 
 @RunWith(MockitoJUnitRunner.class)
-class LivelobackApplicationTests {
+public class LivelobackApplicationTests {
 
    @Mock
    private CityRepository cityRepository;
@@ -38,6 +39,11 @@ class LivelobackApplicationTests {
    @Mock
    private Validator validator;
 
+   @BeforeClass
+   public static void setUp() {
+      FixtureFactoryLoader.loadTemplates("br.com.iser.liveloback.template");
+   }
+
    @Before
    public void setupMock() {
       cityService = new CityServiceImpl();
@@ -46,70 +52,34 @@ class LivelobackApplicationTests {
    }
 
    @Test
-   void testGetAll() {
+   public void testGetAll() {
 
       when(cityRepository.findAll()).thenReturn(Fixture.from(City.class).gimme(3, TestConstant.CITY_ENTITY));
 
       List<City> cities = cityService.getAll();
       assertNotNull(cities);
-      assertEquals(5, cities.size());
+      assertEquals(3, cities.size());
 
       verify(cityRepository, times(1)).findAll();
    }
 
    @Test
-   void testAdd() {
+   public void testAdd() {
+      CityDTO dto = Fixture.from(CityDTO.class).gimme(TestConstant.CITY_DTO);
+      City city = CityConverter.convertToCity(dto);
 
-      City city = Fixture.from(City.class).gimme(TestConstant.CITY_ENTITY);
       when(cityRepository.save(city)).thenReturn(city);
 
-      CityDTO cityDTO = Fixture.from(CityDTO.class).gimme(TestConstant.CITY_DTO);
+      City savedCity = cityService.add(dto);
 
-      City savedCity = cityService.add(cityDTO);
       assertNotNull(savedCity);
 
-      verify(validator, times(1)).validateCityDTO(cityDTO);
+      verify(validator, times(1)).validateCityDTO(dto);
       verify(cityRepository, times(1)).save(city);
    }
 
-   @Test(expected = ValidationException.class)
-   void testAddValidationMissingName() {
-
-      City city = Fixture.from(City.class).gimme(TestConstant.CITY_ENTITY);
-      when(cityRepository.save(city)).thenReturn(city);
-
-      CityDTO cityDTO = Fixture.from(CityDTO.class).gimme(TestConstant.CITY_DTO);
-      cityDTO.setName(null);
-
-      City savedCity = cityService.add(cityDTO);
-   }
-
-   @Test(expected = ValidationException.class)
-   void testAddValidationMissingDTO() {
-
-      City city = Fixture.from(City.class).gimme(TestConstant.CITY_ENTITY);
-      when(cityRepository.save(city)).thenReturn(city);
-
-      CityDTO cityDTO = Fixture.from(CityDTO.class).gimme(TestConstant.CITY_DTO);
-      cityDTO = null;
-
-      City savedCity = cityService.add(cityDTO);
-   }
-
-   @Test(expected = ValidationException.class)
-   void testAddValidationMissingState() {
-
-      City city = Fixture.from(City.class).gimme(TestConstant.CITY_ENTITY);
-      when(cityRepository.save(city)).thenReturn(city);
-
-      CityDTO cityDTO = Fixture.from(CityDTO.class).gimme(TestConstant.CITY_DTO);
-      cityDTO.setState(null);
-
-      City savedCity = cityService.add(cityDTO);
-   }
-
    @Test
-   void testGetByFilter() {
+   public void testGetByFilter() {
 
       when(cityRepository.findByStateContaining("RS")).thenReturn(Optional.ofNullable(Fixture.from(City.class).gimme(2, TestConstant.CITY_ENTITY)));
 
@@ -121,20 +91,8 @@ class LivelobackApplicationTests {
       assertEquals(2, cities.size());
    }
 
-   @Test(expected = SearchException.class)
-   void testGetByFilterSearchException() {
-
-      when(cityRepository.findByStateContaining("RS")).thenReturn(Optional.ofNullable(Fixture.from(City.class).gimme(2, TestConstant.CITY_ENTITY)));
-
-      MultiValueMap<String, String> fields = new LinkedMultiValueMap<>();
-      fields.add("state", "RS");
-      fields.add("name", null);
-
-      cityService.getByFilter(fields);
-   }
-
    @Test(expected = CityNotFoundException.class)
-   void testGetByFilterCityNotFoundException() {
+   public void testGetByFilterCityNotFoundException() {
 
       when(cityRepository.findByStateContaining("RS")).thenReturn(Optional.ofNullable(new ArrayList<>()));
 
