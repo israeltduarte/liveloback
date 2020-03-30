@@ -22,7 +22,6 @@ import br.com.iser.liveloback.util.Message;
 import br.com.iser.liveloback.validation.Validator;
 import br.com.iser.liveloback.validation.exception.CityNotFoundException;
 import br.com.iser.liveloback.validation.exception.ClientNotFoundException;
-import br.com.iser.liveloback.validation.exception.ServiceException;
 import br.com.iser.liveloback.validation.exception.ValidationException;
 
 @Service
