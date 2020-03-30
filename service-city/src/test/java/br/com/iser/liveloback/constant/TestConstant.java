@@ -1,20 +1,11 @@
-// package br.com.iser.liveloback.constant;
-//
-// public class TestConstant {
-//
-//
-// DTO("DTO"),
-// CITY("CITY");
-// ENTITY("ENTITY");
-//
-// public void CityService() {
-// public static String CITY_DTO = generate(CITY, DTO);
-// public static String CITY_ENTITY = generate(CITY, ENTITY);
-// }
-//
-// private String generate(String[] fields) {
-//
-// return "teste";
-// }
-//
-// }
+package br.com.iser.liveloback.constant;
+
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class TestConstant {
+
+   public static String CITY_DTO = "city dto";
+   public static String CITY_ENTITY = "city entity";
+}
