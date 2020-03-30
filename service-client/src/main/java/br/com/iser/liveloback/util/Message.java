@@ -12,4 +12,5 @@ public class Message {
     public static final String CITY_NOT_FOUND = "Data entry error. City not found.";
     public static final String MORE_THAN_ONE_CITY_FOUND = "Data entry error. More than one possibility for the city.";
     public static final String MISSING_LIVING_CITY = "Data entry error. Missing living city";
+	public static final String ERROR_CLIENT_SERVICE = "Error executing Client Service";
 }

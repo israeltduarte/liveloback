@@ -1,5 +1,6 @@
 package br.com.iser.liveloback.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +20,9 @@ import br.com.iser.liveloback.service.ClientService;
 import br.com.iser.liveloback.util.ClientConverter;
 import br.com.iser.liveloback.util.Message;
 import br.com.iser.liveloback.validation.Validator;
+import br.com.iser.liveloback.validation.exception.CityNotFoundException;
 import br.com.iser.liveloback.validation.exception.ClientNotFoundException;
+import br.com.iser.liveloback.validation.exception.ServiceException;
 import br.com.iser.liveloback.validation.exception.ValidationException;
 
 @Service
@@ -51,7 +54,13 @@ public class ClientServiceImpl implements ClientService {
 		MultiValueMap<String, String> fields = new LinkedMultiValueMap<>();
 		fields.add("name", clientDTO.getLivingCity());
 
-		List<City> cities = cityClient.getByFilter(fields).getBody();
+		List<City> cities = new ArrayList<>();
+
+		try {
+			cities = cityClient.getByFilter(fields).getBody();
+		} catch (Exception e) {
+			throw new CityNotFoundException(Message.CITY_NOT_FOUND);
+		}
 
 		return checkCity(cities);
 	}

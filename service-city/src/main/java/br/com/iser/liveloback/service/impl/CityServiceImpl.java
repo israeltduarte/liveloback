@@ -1,13 +1,10 @@
 package br.com.iser.liveloback.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
-
 import br.com.iser.liveloback.model.City;
 import br.com.iser.liveloback.model.dto.CityDTO;
 import br.com.iser.liveloback.repository.CityRepository;
@@ -21,62 +18,61 @@ import lombok.Setter;
 @Service
 public class CityServiceImpl implements CityService {
 
-	@Autowired
-	@Setter
-	private Validator validator;
+   private static final String STATE = "state";
+   private static final String NAME = "name";
 
-	@Autowired
-	@Setter
-	private CityRepository cityRepository;
+   @Autowired
+   @Setter
+   private Validator validator;
 
-	@Override
-	public City add(CityDTO cityDTO) {
+   @Autowired
+   @Setter
+   private CityRepository cityRepository;
 
-		validator.validateCityDTO(cityDTO);
+   @Override
+   public City add(CityDTO cityDTO) {
 
-		City city = CityConverter.convertToCity(cityDTO);
+      validator.validateCityDTO(cityDTO);
 
-		return cityRepository.save(city);
-	}
+      City city = CityConverter.convertToCity(cityDTO);
 
-	@Override
-	public List<CityDTO> getByFilter(MultiValueMap<String, String> params) {
+      return cityRepository.save(city);
+   }
 
-		validator.validateCitySearch(params);
+   @Override
+   public List<CityDTO> getByFilter(MultiValueMap<String, String> params) {
 
-		List<City> listCities = search(params);
+      validator.validateCitySearch(params);
 
-		return CityConverter.convertToListCityDTO(listCities);
-	}
+      List<City> listCities = search(params);
 
-	private List<City> search(MultiValueMap<String, String> fields) {
+      return CityConverter.convertToListCityDTO(listCities);
+   }
 
-		Optional<List<City>> listCitiesOpt;
-		List<City> listCities = new ArrayList<>();
+   private List<City> search(MultiValueMap<String, String> fields) {
 
-		if (fields.get("name") == null) {
-			listCitiesOpt = cityRepository.findByStateContaining(fields.get("state").get(0).toString());
-		} else if (fields.get("state") == null) {
-			listCitiesOpt = cityRepository.findByNameContaining(fields.get("name").get(0).toString());
-		} else {
-			listCitiesOpt = cityRepository.findByNameContainingAndStateContaining(fields.get("name").get(0).toString(),
-					fields.get("state").get(0).toString());
-		}
+      Optional<List<City>> listCitiesOpt;
 
-		if (listCitiesOpt.isPresent()) {
-			listCities = listCitiesOpt.get();
-			if (listCities.isEmpty()) {
-				throw new CityNotFoundException(Message.CITY_NOT_FOUND);
-			}
-		}
+      if (fields.get(NAME) == null) {
+         listCitiesOpt = cityRepository.findByStateContaining(fields.get(STATE).get(0).toString());
+      } else if (fields.get(STATE) == null) {
+         listCitiesOpt = cityRepository.findByNameContaining(fields.get(NAME).get(0).toString());
+      } else {
+         listCitiesOpt =
+               cityRepository.findByNameContainingAndStateContaining(fields.get(NAME).get(0).toString(), fields.get(STATE).get(0).toString());
+      }
 
-		return listCities;
-	}
+      if (!listCitiesOpt.isPresent() || listCitiesOpt.get().isEmpty()) {
+         throw new CityNotFoundException(Message.CITY_NOT_FOUND);
+      }
 
-	@Override
-	public List<City> getAll() {
+      return listCitiesOpt.get();
+   }
 
-		return cityRepository.findAll();
-	}
+   @Override
+   public List<City> getAll() {
+
+      return cityRepository.findAll();
+   }
 
 }
