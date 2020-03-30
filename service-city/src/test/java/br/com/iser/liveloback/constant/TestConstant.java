@@ -1,20 +1,9 @@
-// package br.com.iser.liveloback.constant;
-//
-// public class TestConstant {
-//
-//
-// DTO("DTO"),
-// CITY("CITY");
-// ENTITY("ENTITY");
-//
-// public void CityService() {
-// public static String CITY_DTO = generate(CITY, DTO);
-// public static String CITY_ENTITY = generate(CITY, ENTITY);
-// }
-//
-// private String generate(String[] fields) {
-//
-// return "teste";
-// }
-//
-// }
+package br.com.iser.liveloback.constant;
+
+public class TestConstant {
+
+   public static final String CITY_ENTITY = "city entity";
+   public static final String CITY_DTO = "city dto";
+   public static final String CITY_RANDOM_ENTITY = "city random entity";
+   public static final String CITY_RANDOM_DTO = "city random dto";
+}

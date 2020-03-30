@@ -35,7 +35,7 @@ public class CityServiceImpl implements CityService {
       validator.validateCityDTO(cityDTO);
 
       City city = CityConverter.convertToCity(cityDTO);
-
+      
       return cityRepository.save(city);
    }
 
@@ -52,10 +52,10 @@ public class CityServiceImpl implements CityService {
    private List<City> search(MultiValueMap<String, String> fields) {
 
       Optional<List<City>> listCitiesOpt;
-
-      if (fields.get(NAME) == null) {
+      
+      if (fields.getFirst(NAME) == null) {
          listCitiesOpt = cityRepository.findByStateContaining(fields.get(STATE).get(0).toString());
-      } else if (fields.get(STATE) == null) {
+      } else if (fields.getFirst(STATE) == null) {
          listCitiesOpt = cityRepository.findByNameContaining(fields.get(NAME).get(0).toString());
       } else {
          listCitiesOpt =
